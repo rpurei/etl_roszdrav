@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+{{ super() }}
+<div class="container"> <!--  style="margin-top: 150px; margin-bottom: 50px;" -->
+            <div class="row">
+                <div class="col-md-6">
+                <h5><i class="bi bi-server"></i> Сравнение справочников:
+                    {% if not dict_name %}
+                            Выберите справочник
+                    {% else %}
+                        {{ dict_name }}
+                    {% endif %}
+                </h5>
+                </div>
+                 <div class="col-md-6">
+                     <form method="GET" action="{{ url_for('view_page.compare_show') }}">
+                        {{ dict_form.show_all.label }}
+                        {{ dict_form.show_all }}
+                        {{ dict_form.show_diff.label }}
+                        {{ dict_form.show_diff }}
+                        {{ dict_form.select_dict(width='200') }}
+                        <button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i></button>
+                    </form>
+                 </div>
+            </div>
+</div>
+    <div class="container-fluid">
+    <hr>
+    {% if pagination %}{{ pagination.links }}{% endif %}
+            {% if table_data %}
+                    <table class="table table-bordered">
+                        <thead class="thead">
+                            <div class="max-width">
+                                <div class="float-start">
+                                    <h5>Таблица НСИ</h5>
+                                </div>
+                                <div class="float-end">
+                                    <h5>Таблица Medmap</h5>
+                                </div>
+                            </div>
+                            <tr>
+                                {% for cell in nsi_table_desc %}
+                                    <th scope="col" style="background-color: #f2dbb8">{{ cell }}</th>
+                                {% endfor %}
+                                {% for cell in mm_table_desc %}
+                                    <th scope="col">{{ cell }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in table_data %}
+                                <tr>
+                                    {% for cell in row %}
+                                            {{ cell|safe }}
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                <div class="container alert alert-danger" role="alert">
+                    Нет данных для отображения
+                </div>
+                {% endif %}
+        {% if pagination %}{{ pagination.links }}{% endif %}
+        </div>
+{% endblock %}

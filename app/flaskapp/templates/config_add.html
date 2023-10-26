@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+{{ super() }}
+<div class="container" style="margin-top: 150px; margin-bottom: 50px;">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <p><h5><i class="bi bi-nut-fill"></i> Добавление конфигурации для таблицы</h5></p>
+         </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <hr>
+            <table class="table table-bordered">
+                <thead class="thead">
+                    <tr>
+                        {% for cell in table_config_desc %}
+                            <th scope="col">{{ cell }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    <form method="POST" action="">
+                        <tr>
+                                {{ form_config_add.csrf_token }}
+                                <td>{{ form_config_add.NSI_TABLE_NAME(class_="form-control") }}</td>
+                                <td>{{ form_config_add.OID(class_="form-control") }}</td>
+                                <td>{{ form_config_add.MMDB_TABLE_NAME(class_="form-control") }}</td>
+                                <td>{{ form_config_add.DICT_NAME(class_="form-control") }}</td>
+                                <td>{{ form_config_add.COLUMN_MATCHING(class_="form-control") }}</td>
+                                <td>{{ form_config_add.COLUMN_UPDATE(class_="form-control") }}</td>
+                                <td>{{ form_config_add.COLUMN_CONVERT(class_="form-control") }}</td>
+                                <td>{{ form_config_add.COLUMN_EXTRA(class_="form-control") }}</td>
+                                <td><button class="btn btn-outline-success" type="submit" name="action" value="confirm" title="Сохранить"><i class="bi bi-save"></i></button>
+                                <button class="btn btn-outline-danger" type="submit" name="action" value="cancel" title="Отмена"><i class="bi bi-arrow-left-square"></i></button></td>
+                        </tr>
+                        </form>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+version: "3"
+
+services:
+  db:
+    image: percona/percona-server:8.0
+    command: --default-authentication-plugin=caching_sha2_password --skip-log-bin
+    restart: always
+    cap_add:
+      - SYS_NICE
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=ChangeMe_2023
+    volumes:
+      - ./db:/var/lib/mysql
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+
+  redis:
+    container_name: redis
+    image: redis:5.0.5
+    hostname: redis
+    ports:
+      - "6379:6379"
+
+  app:
+    container_name: flask-app
+    build: ./app
+    ports:
+      - "5000:5000"
+    expose:
+      - "5000"
+    depends_on:
+      - db
+      - redis
+      - worker
+    volumes:
+      - ./app:/app
+    environment:
+      - WAIT_HOSTS=db:3306
+      - WAIT_HOSTS_TIMEOUT=600
+      - WAIT_SLEEP_INTERVAL=30
+      - WAIT_HOST_CONNECT_TIMEOUT=60
+
+  worker:
+    build:
+      context: ./app
+    hostname: worker
+    command: sh -c "cd ./flaskapp && python ./tasks/app_nsi.py --mode init-config && celery -A tasks.tasks worker"
+    volumes:
+      - ./app:/app
+    depends_on:
+      - redis
+      - db
+
+  flower:
+    build: ./app
+    command: sh -c "cd ./flaskapp && celery -A tasks flower"
+    volumes:
+      - ./app:/app
+    working_dir: /app
+    ports:
+      - "5555:5555"
+    depends_on:
+      - worker
+      - redis

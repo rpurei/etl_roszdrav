@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+{{ super() }}
+<div class="container"> <!--  style="margin-top: 150px; margin-bottom: 50px;" -->
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <p><h5><i class="bi bi-tools"></i> Для словаря:</h5></p>
+            <hr>
+            <input type="checkbox" onClick="toggle(this)" />  Выбрать все<br/>
+            <form method="post" id="runTaskForm" style="margin-top: 8px;" onsubmit="return validateme();" action="/operations">
+                <div class="form-group">
+                    {{ process_form.csrf_token() }}
+                    <div class="row">
+                        <div class="col col-lg-8">
+                            {{ process_form.checkboxes_dict(class_="list-group") }}
+                        </div>
+                        <div class="col">
+                            <div class="list-group">
+                                {% for label in dict_labels_mz %}
+                                    {{ label|safe }}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="list-group">
+                                {% for label in dict_labels_mm %}
+                                    {{ label|safe }}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <p><h5>Выберите операцию:</h5></p>
+                    <hr>
+                    {{ process_form.operation_dict(class_="list-group") }}
+                    {{ process_form.validation_status }}
+                    {{ process_form.task_start }}
+                    {{ process_form.task_args }}
+                    {{ process_form.task_id }}
+                    {{ process_form.master_mode }}
+                    <div style="min-height: 20px;"></div>
+                    <button class="btn btn-outline-success {{ submit_disable }}" type="submit" id="runTask" style="width: 220px;"><i class="bi bi-play-fill"></i> Запустить операцию</button>
+                </div>
+            </form>
+            <form method="post" action="/stop">
+                <div class="form-group" style="margin-top: 20px;">
+                    <button class="btn btn-outline-danger" type="submit" id="stopTask" style="width: 220px; display: {{ stop_disable }}"><i class="bi bi-stop"></i> Остановить операцию</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <p><h5>Список операций</h5></p>
+            {% if tasks %}
+                <p>Текущие операции: {{ tasks }}</p>
+            {% endif %}
+            <div class="card" id="task-messages"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

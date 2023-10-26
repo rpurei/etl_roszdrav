@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+{{ super() }}
+<div class="container" style="margin-top: 150px; margin-bottom: 50px;">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <p><h5><i class="bi bi-nut-fill"></i> Удалить настройки таблицы {{ table_name }} ?</h5></p>
+         </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <hr>
+            <div class="text-center">
+                <form method="POST" action="">
+                    {{ form_config_delete.csrf_token }}
+                    <button class="btn btn-outline-success" type="submit" name="action" value="confirm" title="Удалить"><i class="bi bi-save"></i> Удалить</button>
+                    <button class="btn btn-outline-danger" type="submit" name="action" value="cancel" title="Отмена"><i class="bi bi-arrow-left-square"></i> Отмена</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

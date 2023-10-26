@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block content %}
+{{ super() }}
+<div class="container">  <!-- style="margin-top: 150px; margin-bottom: 50px;" -->
+    <div class="panel panel-default">
+        <div class="d-flex flex-row">
+            <div class="d-flex justify-content-start" style="margin-top: 3px;"><p><h5><i class="bi bi-nut-fill"></i> Конфигурация:</h5></p></div>
+            <div class="d-flex justify-content-end" style="margin-left: 20px;"><a class="btn btn-outline-success" title="Добавить" href="{{ url_for('view_page.config_add') }}" role="button"><i class="bi bi-plus-square"></i></a></div>
+            <div class="d-flex justify-content-end" style="margin-left: 20px; border: solid 1px #ec8e09; padding: 6px; border-radius: 0.25rem;">
+                <input class="form-check-input" type="checkbox" id="mastermode" name="mastermode" {% if master_mode %} checked data-bs-toggle="modal" data-bs-target="#masterModalDisable" {% else %} data-bs-toggle="modal" data-bs-target="#masterModal" {% endif %} style="margin-left: 10px; margin-right: 10px;">
+                <label class="form-check-label" for="mastermode" style="margin-right: 10px;">Работа с БД master</label>
+            </div>
+         </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <hr>
+            {% if table_config_data %}
+                    <table class="table table-bordered">
+                        <thead class="thead">
+                            <tr>
+                                {% for cell in table_config_desc %}
+                                    <th scope="col">{{ cell }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in table_config_data %}
+                                <tr>
+                                    {% for cell in row %}
+                                            <td>{{ cell }}</td>
+                                    {% endfor %}
+                                        <td>
+                                            <div class="container" style="width: 90px;">
+                                            <div class="row">
+                                                <div class="col" style="max-width: 45px; padding: 0px;">
+                                                    <a class="btn btn-outline-success" title="Редактировать" href="{{ url_for('view_page.config_edit', record_id=row[0]) }}" role="button"><i class="bi bi-pencil-square"></i></a>
+                                                 </div>
+                                                <div class="col" style="max-width: 45px; padding: 0px;">
+                                                    <a class="btn btn-outline-danger" title="Удалить" href="{{ url_for('view_page.config_delete', record_id=row[0]) }}" role="button"><i class="bi bi-trash"></i></a>
+                                                 </div>
+                                            </div>
+                                                </div>
+                                        </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    Конфигурация пуста
+                {% endif %}
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="masterModal" tabindex="-1" aria-labelledby="masterModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="masterModalLabel">Подтвердите доступ к master БД</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+      </div>
+      <form action="/config" method="POST">
+          <div class="modal-body">
+              <div class="row">
+                  {{ master_form.csrf_token }}
+                  <div class="col">
+                      {{ master_form.code.label }}
+                      {{ master_form.code(disabled=True) }}
+                  </div>
+                  <div class="col">
+                      {{ master_form.confirm.label }}
+                      {{ master_form.confirm }}
+                  </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            <button type="submit" class="btn btn-primary">Включить доступ к master</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="masterModalDisable" tabindex="-1" aria-labelledby="masterModalLabelDisable" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="masterModalLabelDisable">Подтвердите отключение master БД</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+      </div>
+      <form action="/masterdisable" method="POST">
+          <div class="modal-body">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            <button type="submit" class="btn btn-primary">Отключить доступ к master</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

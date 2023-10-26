@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% block content %}
+    {{ super() }}
+    <div class="flex-fill"> <!--  style="margin-top: 150px; margin-bottom: 50px;" -->
+        <div class="text-center mt-5">
+            <h4>Сервис обновления справочников НСИ  АО "АМТ"</h4>
+                <p class="lead"></p>
+        </div>
+    <hr>
+    </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h4>
+                        <a class="btn btn-outline-primary" data-bs-toggle="collapse" href="#collapseDownloadDict" role="button" aria-expanded="true" aria-controls="collapseDownloadDict" style="width: 300px;">
+                            Статус загрузки справочников
+                        </a>
+                    </h4>
+                </div>
+                <div class="col-md-6">
+                    <form method="POST" action="">
+                        {{ form_search.csrf_token() }}
+                        {{ form_search.dt(class="datepicker") }}
+                        <button class="btn btn-outline-danger" onclick="document.getElementById('dt').value = ''">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                        {{ form_search.select_dict(width='200') }}
+                        <button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+                <div class="show" id="collapseDownloadDict">
+                {% if table_download_data %}
+                    <table class="table table-bordered">
+                        <thead class="thead">
+                            <tr>
+                                {% for cell in table_download_desc %}
+                                    <th scope="col">{{ cell }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in table_download_data %}
+                                <tr>
+                                    {% for cell in row %}
+                                        {% if cell == 'Success' %}
+                                            <td style="background-color: #e7f2dc"></td>
+                                        {% elif cell == 'Warning' %}
+                                            <td style="background-color: #f2dbb8"></td>
+                                        {% elif cell == 'Critical' %}
+                                            <td style="background-color: #edcccc"></td>
+                                        {% elif cell == row[1] %}
+                                            <td>{{ cell|truncate(16, True, '...') }}</td>
+                                        {% else %}
+                                            <td>{{ cell|safe }}</td>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="container alert alert-danger" role="alert">
+                        Нет данных для отображения
+                    </div>
+                {% endif %}
+                </div>
+        </div>
+    <hr>
+    <div class="container">
+            <div class="row">
+                <div class="col-md-2">
+                    <h4>
+                        <a class="btn btn-outline-primary" data-bs-toggle="collapse" href="#collapseUpdateDict" role="button" aria-expanded="true" aria-controls="collapseUpdateDict" style="width: 300px;">
+                            Статус обновления справочников
+                        </a>
+                    </h4>
+                </div>
+            </div>
+    </div>
+        <div class="container-fluid">
+                <div class="show" id="collapseUpdateDict">
+                {% if table_update_data %}
+                    <table class="table table-bordered">
+                        <thead class="thead">
+                            <tr>
+                                {% for cell in table_download_desc %}
+                                    <th scope="col">{{ cell }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in table_update_data %}
+                                <tr>
+                                    {% for cell in row %}
+                                        {% if cell == 'Success' %}
+                                            <td style="background-color: #e7f2dc"></td> <!-- {{ cell|safe }} -->
+                                        {% elif cell == 'Warning' %}
+                                            <td style="background-color: #f2dbb8"></td>
+                                        {% elif cell == 'Critical' %}
+                                            <td style="background-color: #edcccc"></td>
+                                        {% elif cell == row[1] %}
+                                            <td>{{ cell|truncate(16, True, '...') }}</td>
+                                        {% else %}
+                                            <td>{{ cell|safe }}</td>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="container alert alert-danger" role="alert">
+                        Нет данных для отображения
+                    </div>
+                {% endif %}
+                </div>
+        </div>
+    <hr>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2">
+                    <h4>
+                        <a class="btn btn-outline-primary" data-bs-toggle="collapse" href="#collapseCompareDict" role="button" aria-expanded="true" aria-controls="collapseCompareDict" style="width: 300px;">
+                            Статус сравнения справочников
+                        </a>
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+                <div class="show" id="collapseCompareDict">
+                {% if table_compare_data %}
+                    <table class="table table-bordered">
+                        <thead class="thead">
+                            <tr>
+                                {% for cell in table_compare_desc %}
+                                        <th scope="col">{{ cell }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in table_compare_data %}
+                                <tr>
+                                    {% for cell in row %}
+                                        {% if cell == 'Success' %}
+                                            <td style="background-color: #e7f2dc"></td>
+                                        {% elif cell == 'Warning' %}
+                                            <td style="background-color: #f2dbb8"></td>
+                                        {% elif cell == 'Critical' %}
+                                            <td style="background-color: #edcccc"></td>
+                                        {% elif cell == row[1] %}
+                                            <td>{{ cell|truncate(16, True, '...') }}</td>
+                                        {% else %}
+                                            <td>{{ cell|safe }}</td>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="container alert alert-danger" role="alert">
+                        Нет данных для отображения
+                    </div>
+                {% endif %}
+                </div>
+        </div>
+    <hr>
+{% endblock %}
